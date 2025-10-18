@@ -33,15 +33,16 @@ dotnet build
 dotnet maui run
 ```
 
-🧭 Roadmap
+## 🧭 Roadmap
 
- Adjustable edge detection sensitivity
+### 🎯 Planned Features
+- [ ] Adjustable edge detection sensitivity  
+- [ ] Export traced outlines as **SVG** or **PNG**  
+- [ ] Add **AR overlay** for enhanced visual tracing  
+- [ ] Integrate **AI-based shape recognition**  
+- [ ] Improve camera stabilization and frame alignment  
+- [ ] Add **color mode** for object contrast detection  
 
- Export traced outlines (SVG/PNG)
-
- Add AR overlay for enhanced tracing
-
- Optional AI-based shape recognition
 
 
 
