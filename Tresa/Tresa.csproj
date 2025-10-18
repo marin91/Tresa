@@ -66,4 +66,8 @@
 		<PackageReference Include="CommunityToolkit.Maui.Camera" Version="2.0.3" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Pages\" />
+	</ItemGroup>
+
 </Project>
