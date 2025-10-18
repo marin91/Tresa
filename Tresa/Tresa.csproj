@@ -60,6 +60,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <AndroidResource Remove="NewFolder\**" />
+	  <Compile Remove="NewFolder\**" />
+	  <EmbeddedResource Remove="NewFolder\**" />
+	  <MauiCss Remove="NewFolder\**" />
+	  <MauiXaml Remove="NewFolder\**" />
+	  <None Remove="NewFolder\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.8" />
 		<PackageReference Include="CommunityToolkit.Maui" Version="11.2.0" />
@@ -67,7 +76,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Pages\" />
+	  <MauiXaml Update="Views\Pages\GalleryPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\Pages\SettingsPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	</ItemGroup>
 
 </Project>

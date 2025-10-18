@@ -3,7 +3,7 @@ using CommunityToolkit.Maui.Core.Primitives;
 using CommunityToolkit.Maui.Views;
 using System.Threading;
 
-namespace Tresa;
+namespace Tresa.Views.Pages;
 
 public partial class MainPage : ContentPage
 {
