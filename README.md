@@ -19,18 +19,19 @@ It’s designed for artists, designers, and creators who want to capture and fol
 ```bash
 git clone https://github.com/your-username/Tresa.git
 cd Tresa
-
+```
 
 ### 2. Restore dependencies
-
+```bash
 dotnet workload restore
 dotnet restore
-
+```
 
 ### 3. Build and run
-
+```bash
 dotnet build
 dotnet maui run
+```
 
 🧭 Roadmap
 
