@@ -1,22 +1,28 @@
-﻿<ContentPage
-    x:Class="Tresa.Views.Pages.MainPage"
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-    BackgroundColor="Black">
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+x:Class="Tresa.Views.Pages.MainPage"
+xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+xmlns:vm="clr-namespace:Tresa.ViewModels"
+xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+xmlns:camera="clr-namespace:CommunityToolkit.Maui.Camera;assembly=CommunityToolkit.Maui.Camera"
+Title="Tresa">
 
-    <Grid>
-        <toolkit:CameraView x:Name="Camera"
-                            HorizontalOptions="Fill"
-                            VerticalOptions="Fill" />
 
-        <HorizontalStackLayout Padding="12" Spacing="12"
-                               VerticalOptions="End"
-                               BackgroundColor="#66000000">
-            <Button Text="Start" Clicked="OnStart"/>
-            <Button Text="Stop"  Clicked="OnStop"/>
-            <Button Text="Flip"  Clicked="OnFlip"/>
-            <Button Text="Torch" Clicked="OnTorch"/>
-        </HorizontalStackLayout>
+    <Grid RowDefinitions="Auto,* ,Auto" Padding="0" BackgroundColor="Black">
+        <!-- Top Bar -->
+        <Grid HeightRequest="48" BackgroundColor="Black" Padding="12,0">
+            <Label Text="Tresa" FontSize="20" TextColor="White" VerticalOptions="Center" />
+        </Grid>
+
+
+
+
+        <!-- Bottom Controls -->
+        <Grid Grid.Row="2" Padding="16" ColumnDefinitions="*,*,*" BackgroundColor="#101010">
+            <Button Text="Capture" Grid.Column="0" Command="{Binding CaptureCommand}" />
+            <Button Text="Settings" Grid.Column="1" Command="{Binding OpenSettingsCommand}" />
+            <Button Text="Gallery" Grid.Column="2" Command="{Binding OpenGalleryCommand}" />
+        </Grid>
     </Grid>
 </ContentPage>

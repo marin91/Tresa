@@ -1,14 +1,10 @@
-<?xml version="1.0" encoding="UTF-8" ?>
 <Shell
     x:Class="Tresa.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:Tresa.Views.Pages"
-    Title="Tresa">
+    xmlns:views="clr-namespace:Tresa.Views.Pages">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
-
+    <ShellContent Route="main"     Title="Tresa" ContentTemplate="{DataTemplate views:MainPage}" />
+    <ShellContent Route="settings"               ContentTemplate="{DataTemplate views:SettingsPage}" />
+    <ShellContent Route="gallery"                ContentTemplate="{DataTemplate views:GalleryPage}" />
 </Shell>
