@@ -6,8 +6,9 @@ namespace Tresa.ViewModels;
 
 public class MainViewModel : ObservableObject
 {
-    private readonly ICameraService? _cameraService;
-    private readonly IStorageService? _storageService;
+    private readonly ICameraService _cameraService;
+    private readonly IStorageService _storageService;
+    private readonly INavigationService _navigationService;
 
     private CancellationTokenSource? _captureCts;
 
@@ -19,18 +20,19 @@ public class MainViewModel : ObservableObject
     public IAsyncRelayCommand OpenGalleryCommand { get; }
 
 
-    public MainViewModel(ICameraService cameraService, IStorageService storageService)
+    public MainViewModel(ICameraService cameraService, IStorageService storageService, 
+        INavigationService navigationService)
     {
         _cameraService = cameraService;
         _storageService = storageService;
+        _navigationService = navigationService;
 
         OverlayDrawable = new PlaceholderEdgesDrawable();
 
         CaptureCommand = new AsyncRelayCommand(CaptureAsync);
 
-        OpenSettingsCommand = new AsyncRelayCommand(() => NavigateAsync("settings"));
-        OpenGalleryCommand = new AsyncRelayCommand(() => NavigateAsync("gallery"));
-
+        OpenSettingsCommand = new AsyncRelayCommand(() => _navigationService.GoToAsync("settings"));
+        OpenGalleryCommand = new AsyncRelayCommand(() => _navigationService.GoToAsync("gallery"));
 
     }
 

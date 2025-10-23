@@ -28,6 +28,7 @@ namespace Tresa
             // Services
             builder.Services.AddTransient<IStorageService, StorageService>();
             builder.Services.AddTransient<ICameraService, CameraService>();
+            builder.Services.AddSingleton<INavigationService, ShellNavigationService>();
 
 
             // ViewModels
