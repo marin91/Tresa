@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Maui.Views;
+using Microsoft.Maui.Controls;
 using Tresa.Services.Interfaces;
 
 namespace Tresa.Services;
@@ -12,56 +13,37 @@ public class CameraService : ICameraService
     }
 
     // TODO: wire to CommunityToolkit.Maui.Camera APIs or platform captures
-    public async Task<byte[]?> CaptureAsync(CameraView cameraView, CancellationToken cancellationToken)
+    public async Task<byte[]?> CaptureAsync(CameraView view, CancellationToken ct)
     {
-        // Ensure preview is running (safe to call if already started)
-        try 
+        try { await view.StartCameraPreview(ct).ConfigureAwait(false); } 
+        catch(Exception e)
         { 
-            await cameraView.StartCameraPreview(cancellationToken); 
-        } 
-        catch(Exception e) 
-        { 
-            /* ignore if not needed */ 
+        
         }
 
         var tcs = new TaskCompletionSource<byte[]?>(TaskCreationOptions.RunContinuationsAsynchronously);
+        using var reg = ct.Register(() => tcs.TrySetCanceled(ct));
 
-        EventHandler<MediaCapturedEventArgs>? handler = null;
-        handler = async (_, args) =>
+        void OnCaptured(object? _, MediaCapturedEventArgs e)
         {
-            try
-            {
-                // args.Media is a Stream for the captured image
-                using var ms = new MemoryStream();
-                await args.Media.CopyToAsync(ms).ConfigureAwait(false);
-                tcs.TrySetResult(ms.ToArray());
-            }
-            catch (Exception ex)
-            {
-                tcs.TrySetException(ex);
-            }
-            finally
-            {
-                // Important: unsubscribe to avoid leaks / duplicate completions
-                cameraView.MediaCaptured -= handler!;
-            }
-        };
+            view.MediaCaptured -= OnCaptured;
+            using var ms = new MemoryStream();
+            e.Media.CopyTo(ms);                 // sync copy keeps handler simple
+            tcs.TrySetResult(ms.ToArray());
+        }
 
-        cameraView.MediaCaptured += handler;
+        view.MediaCaptured += OnCaptured;
 
         try
         {
-            // Triggers a single still capture
-            await cameraView.CaptureAsync();
+            await view.CaptureAsync().ConfigureAwait(false);
         }
         catch (Exception ex)
         {
-            // If CaptureImage() throws (e.g., permissions), make sure we clean up
-            cameraView.MediaCaptured -= handler;
+            view.MediaCaptured -= OnCaptured;
             tcs.TrySetException(ex);
         }
 
-        // Return the image bytes (or null if you prefer to signal failure differently)
         return await tcs.Task.ConfigureAwait(false);
     }
 }
