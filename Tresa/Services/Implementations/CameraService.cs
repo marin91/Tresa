@@ -6,20 +6,18 @@ namespace Tresa.Services;
 public class CameraService : ICameraService
 {
 
-    private readonly CameraView _cameraView;
-
-    public CameraService(CameraView cameraView)
+    public CameraService()
     {
-        _cameraView = cameraView;
+
     }
 
     // TODO: wire to CommunityToolkit.Maui.Camera APIs or platform captures
-    public async Task<byte[]?> CaptureAsync(CancellationToken cancellationToken)
+    public async Task<byte[]?> CaptureAsync(CameraView cameraView, CancellationToken cancellationToken)
     {
         // Ensure preview is running (safe to call if already started)
         try 
         { 
-            await _cameraView.StartCameraPreview(cancellationToken); 
+            await cameraView.StartCameraPreview(cancellationToken); 
         } 
         catch(Exception e) 
         { 
@@ -45,21 +43,21 @@ public class CameraService : ICameraService
             finally
             {
                 // Important: unsubscribe to avoid leaks / duplicate completions
-                _cameraView.MediaCaptured -= handler!;
+                cameraView.MediaCaptured -= handler!;
             }
         };
 
-        _cameraView.MediaCaptured += handler;
+        cameraView.MediaCaptured += handler;
 
         try
         {
             // Triggers a single still capture
-            await _cameraView.CaptureAsync();
+            await cameraView.CaptureAsync();
         }
         catch (Exception ex)
         {
             // If CaptureImage() throws (e.g., permissions), make sure we clean up
-            _cameraView.MediaCaptured -= handler;
+            cameraView.MediaCaptured -= handler;
             tcs.TrySetException(ex);
         }
 

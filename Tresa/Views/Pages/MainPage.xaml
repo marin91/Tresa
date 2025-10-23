@@ -15,12 +15,19 @@ Title="Tresa">
             <Label Text="Tresa" FontSize="20" TextColor="White" VerticalOptions="Center" />
         </Grid>
 
-
+        <!-- Camera preview surface -->
+        <Grid Grid.Row="1">
+            <toolkit:CameraView
+                x:Name="Camera"
+                HorizontalOptions="Fill"
+                VerticalOptions="Fill" />
+            <GraphicsView Drawable="{Binding OverlayDrawable}" />
+        </Grid>
 
 
         <!-- Bottom Controls -->
         <Grid Grid.Row="2" Padding="16" ColumnDefinitions="*,*,*" BackgroundColor="#101010">
-            <Button Text="Capture" Grid.Column="0" Command="{Binding CaptureCommand}" />
+            <Button Text="Capture" Grid.Column="0" Command="{Binding CaptureCommand}" CommandParameter="{x:Reference Camera}" />
             <Button Text="Settings" Grid.Column="1" Command="{Binding OpenSettingsCommand}" />
             <Button Text="Gallery" Grid.Column="2" Command="{Binding OpenGalleryCommand}" />
         </Grid>

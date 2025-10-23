@@ -1,6 +1,8 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Maui.Views;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Tresa.Services.Interfaces;
+using static Microsoft.Maui.ApplicationModel.Permissions;
 
 namespace Tresa.ViewModels;
 
@@ -15,7 +17,7 @@ public class MainViewModel : ObservableObject
 
     public IDrawable OverlayDrawable { get; }
 
-    public IAsyncRelayCommand CaptureCommand { get; }
+    public IAsyncRelayCommand<CameraView> CaptureCommand { get; }
     public IAsyncRelayCommand OpenSettingsCommand { get; }
     public IAsyncRelayCommand OpenGalleryCommand { get; }
 
@@ -29,44 +31,20 @@ public class MainViewModel : ObservableObject
 
         OverlayDrawable = new PlaceholderEdgesDrawable();
 
-        CaptureCommand = new AsyncRelayCommand(CaptureAsync);
+        CaptureCommand = new AsyncRelayCommand<CameraView>(CaptureAsync);
 
         OpenSettingsCommand = new AsyncRelayCommand(() => _navigationService.GoToAsync("settings"));
         OpenGalleryCommand = new AsyncRelayCommand(() => _navigationService.GoToAsync("gallery"));
 
     }
 
-    private async Task CaptureAsync()
+    private async Task CaptureAsync(CameraView? cameraView)
     {
-        CaptureCommand.NotifyCanExecuteChanged();
+        if (cameraView is null) return;
 
-       _captureCts = new CancellationTokenSource(TimeSpan.FromSeconds(15));
-
-        try
-        {
-            var bytes = await _cameraService!.CaptureAsync(_captureCts.Token);
-
-            if (bytes is null || bytes.Length == 0)
-            {   
-                return;
-            }
-
-            // Prefer StorageService to return a path/string so UI can show it
-            var savedPath = await _storageService!.SaveAsync(bytes);
-
-        }
-        catch (OperationCanceledException)
-        {
-
-        }
-        catch (Exception ex)
-        {
-
-        }
-        finally
-        {            
-            CaptureCommand.NotifyCanExecuteChanged();
-        }
+        var bytes = await _cameraService.CaptureAsync(cameraView, CancellationToken.None);
+        if (bytes is { Length: > 0 })
+            await _storageService.SaveAsync(bytes);
     }
 
     // Simple placeholder for now; replace with your real drawable

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CommunityToolkit.Maui.Views;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace Tresa.Services.Interfaces
 {
     public interface ICameraService
     {
-        Task<byte[]?> CaptureAsync(CancellationToken cancellationToken);
+        Task<byte[]?> CaptureAsync(CameraView cameraView, CancellationToken cancellationToken);
     }
 }
