@@ -8,6 +8,6 @@ namespace Tresa.Services.Interfaces
 {
     public interface ICameraService
     {
-        Task<byte[]?> CaptureAsync();
+        Task<byte[]?> CaptureAsync(CancellationToken cancellationToken);
     }
 }

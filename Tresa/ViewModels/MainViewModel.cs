@@ -1,43 +1,70 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Tresa.Services.Interfaces;
 
 namespace Tresa.ViewModels;
 
-public class MainViewModel : INotifyPropertyChanged
+public class MainViewModel : ObservableObject
 {
-    private readonly ICameraService? _camera;
-    private readonly IStorageService? _storage;
+    private readonly ICameraService? _cameraService;
+    private readonly IStorageService? _storageService;
 
-    public event PropertyChangedEventHandler? PropertyChanged;
-    private void OnPropertyChanged([CallerMemberName] string? name = null)
-        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+    private CancellationTokenSource? _captureCts;
+
 
     public IDrawable OverlayDrawable { get; }
 
-    public ICommand CaptureCommand { get; }
-    public ICommand OpenSettingsCommand { get; }
-    public ICommand OpenGalleryCommand { get; }
+    public IAsyncRelayCommand CaptureCommand { get; }
+    public IAsyncRelayCommand OpenSettingsCommand { get; }
+    public IAsyncRelayCommand OpenGalleryCommand { get; }
 
 
-    public MainViewModel(ICameraService camera, IStorageService storage)
+    public MainViewModel(ICameraService cameraService, IStorageService storageService)
     {
-        _camera = camera;
-        _storage = storage;
+        _cameraService = cameraService;
+        _storageService = storageService;
 
         OverlayDrawable = new PlaceholderEdgesDrawable();
 
-        CaptureCommand = new Command(async () =>
-        {
-            if (_camera is null || _storage is null) return; // XAML ctor path: skip
-            var bytes = await _camera.CaptureAsync();
-            if (bytes is not null)
-                await _storage.SaveAsync(bytes);
-        });
+        CaptureCommand = new AsyncRelayCommand(CaptureAsync);
 
-        OpenSettingsCommand = new Command(async () => await Shell.Current.GoToAsync("settings"));
-        OpenGalleryCommand = new Command(async () => await Shell.Current.GoToAsync("gallery"));
+        OpenSettingsCommand = new AsyncRelayCommand(() => NavigateAsync("settings"));
+        OpenGalleryCommand = new AsyncRelayCommand(() => NavigateAsync("gallery"));
+
+
+    }
+
+    private async Task CaptureAsync()
+    {
+        CaptureCommand.NotifyCanExecuteChanged();
+
+       _captureCts = new CancellationTokenSource(TimeSpan.FromSeconds(15));
+
+        try
+        {
+            var bytes = await _cameraService!.CaptureAsync(_captureCts.Token);
+
+            if (bytes is null || bytes.Length == 0)
+            {   
+                return;
+            }
+
+            // Prefer StorageService to return a path/string so UI can show it
+            var savedPath = await _storageService!.SaveAsync(bytes);
+
+        }
+        catch (OperationCanceledException)
+        {
+
+        }
+        catch (Exception ex)
+        {
+
+        }
+        finally
+        {            
+            CaptureCommand.NotifyCanExecuteChanged();
+        }
     }
 
     // Simple placeholder for now; replace with your real drawable
