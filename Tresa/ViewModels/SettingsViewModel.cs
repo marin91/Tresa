@@ -7,7 +7,8 @@ namespace Tresa.ViewModels
 {
     public class SettingsViewModel : INotifyPropertyChanged
     {
-        private readonly IStorageService _storage;
+        private readonly IStorageService _storageService;
+        private readonly INavigationService _navigationService;
 
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -20,17 +21,18 @@ namespace Tresa.ViewModels
 
         public ICommand SaveCommand { get; }
 
-        public SettingsViewModel(IStorageService storage) 
+        public SettingsViewModel(IStorageService storageService, INavigationService navigationService) 
         {
-            _storage = storage;
+            _storageService = storageService;
+            _navigationService = navigationService;
 
-            Settings = _storage.LoadSettings() ?? new Models.AppSettings();
+            Settings = _storageService.LoadSettings() ?? new Models.AppSettings();
 
             SaveCommand = new Command(async () =>
             {
-                await _storage.SaveSettingsAsync(Settings);
+                await _storageService.SaveSettingsAsync(Settings);
                 await Shell.Current.DisplayAlert("Settings", "Saved.", "OK");
-                await Shell.Current.GoToAsync("..");
+                await _navigationService.GoToAsync("..");
             });
         }
     }
