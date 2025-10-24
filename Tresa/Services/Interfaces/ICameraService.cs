@@ -10,5 +10,7 @@ namespace Tresa.Services.Interfaces
     public interface ICameraService
     {
         Task<byte[]?> CaptureAsync(CameraView cameraView, CancellationToken cancellationToken);
+
+        Task InitializeAsync(CameraView view, CancellationToken ct = default);
     }
 }

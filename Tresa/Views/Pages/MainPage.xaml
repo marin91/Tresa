@@ -1,12 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-x:Class="Tresa.Views.Pages.MainPage"
-xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-xmlns:vm="clr-namespace:Tresa.ViewModels"
-xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-xmlns:camera="clr-namespace:CommunityToolkit.Maui.Camera;assembly=CommunityToolkit.Maui.Camera"
-Title="Tresa">
+    x:Class="Tresa.Views.Pages.MainPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:Tresa.ViewModels"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:camera="clr-namespace:CommunityToolkit.Maui.Views;assembly=CommunityToolkit.Maui.Camera"
+    xmlns:core="clr-namespace:CommunityToolkit.Maui.Core;assembly=CommunityToolkit.Maui.Camera"
+    Title="Tresa">
 
 
     <Grid RowDefinitions="Auto,* ,Auto" Padding="0" BackgroundColor="Black">
@@ -17,11 +18,10 @@ Title="Tresa">
 
         <!-- Camera preview surface -->
         <Grid Grid.Row="1">
-            <toolkit:CameraView
-                x:Name="Camera"
-                HorizontalOptions="Fill"
-                VerticalOptions="Fill" />
-            <GraphicsView Drawable="{Binding OverlayDrawable}" />
+          <camera:CameraView
+            x:Name="Camera"
+            HorizontalOptions="Fill"
+            VerticalOptions="Fill" />
         </Grid>
 
 

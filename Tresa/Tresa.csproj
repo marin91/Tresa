@@ -61,10 +61,10 @@
 
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+		<!-- REMOVE Microsoft.Maui.Controls line, or pin it to 9.0.72 -->
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.8" />
 		<PackageReference Include="CommunityToolkit.Maui" Version="11.2.0" />
-		<PackageReference Include="CommunityToolkit.Maui.Camera" Version="2.0.3" />
+		<PackageReference Include="CommunityToolkit.Maui.Camera" Version="3.0.2" />
 	</ItemGroup>
 
 	<ItemGroup>

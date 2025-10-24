@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Maui.Views;
+﻿using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Tresa.Services.Interfaces;
@@ -21,6 +22,7 @@ public class MainViewModel : ObservableObject
     public IAsyncRelayCommand OpenSettingsCommand { get; }
     public IAsyncRelayCommand OpenGalleryCommand { get; }
 
+    public IAsyncRelayCommand<CameraView> InitializeCameraCommand { get; }
 
     public MainViewModel(ICameraService cameraService, IStorageService storageService, 
         INavigationService navigationService)
@@ -30,12 +32,18 @@ public class MainViewModel : ObservableObject
         _navigationService = navigationService;
 
         OverlayDrawable = new PlaceholderEdgesDrawable();
-
+        InitializeCameraCommand = new AsyncRelayCommand<CameraView>(InitializeCameraAsync);
         CaptureCommand = new AsyncRelayCommand<CameraView>(CaptureAsync);
 
         OpenSettingsCommand = new AsyncRelayCommand(() => _navigationService.GoToAsync("settings"));
         OpenGalleryCommand = new AsyncRelayCommand(() => _navigationService.GoToAsync("gallery"));
 
+    }
+
+    private async Task InitializeCameraAsync(CameraView? view)
+    {
+        if (view is null) return;
+        await _cameraService.InitializeAsync(view);
     }
 
     private async Task CaptureAsync(CameraView? cameraView)
@@ -46,6 +54,7 @@ public class MainViewModel : ObservableObject
         if (bytes is { Length: > 0 })
             await _storageService.SaveAsync(bytes);
     }
+
 
     // Simple placeholder for now; replace with your real drawable
     private sealed class PlaceholderEdgesDrawable : IDrawable
